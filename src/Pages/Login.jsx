@@ -8,12 +8,13 @@ function Login() {
         <LoginTop>
           <LoginTitle>Login</LoginTitle>
           <ChatMeLogo src="/Images/chatmelogo.png" />
+          <SeperationLine></SeperationLine>
         </LoginTop>
         <LoginBottom>
           <FormContainer>
             <FormType>
               <FormTitle label="email">Email</FormTitle>
-              <FormInput type="text" id="email" placeholder="Email" />
+              <FormInput type="email" id="email" placeholder="Email" />
             </FormType>
             <FormType>
               <FormTitle label="password">Password</FormTitle>
@@ -46,9 +47,34 @@ const LoginContainer = styled.div`
 
 const LoginDiv = styled.div`
   width: 70%;
-  height: 70%;
+  height: 750px;
   background: #fff;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  @media only screen and (min-width: 768px) {
+    width: 50%;
+    height: 750px;
+  }
+  @media only screen and (min-width: 1024px) {
+    width: 70%;
+    height: 600px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  @media only screen and (min-width: 1440px) {
+    width: 70%;
+    height: 750px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
 `;
 
 const LoginTitle = styled.h1`
@@ -66,12 +92,27 @@ const LoginTop = styled.div`
   justify-content: space-around;
   flex-direction: column;
   align-items: center;
-  height: 35%;
+  position: relative;
+`;
+const SeperationLine = styled.div`
+  width: 100%;
+  height: 1px;
+  background: #2a8bf2;
+  position: absolute;
+  bottom: -70px;
+
+  @media only screen and (min-width: 768px) {
+    width: 50%;
+    height: 1px;
+  }
+  @media only screen and (min-width: 1024px) {
+    width: 100%;
+    height: 1px;
+  }
 `;
 const LoginBottom = styled.div`
   display: flex;
   flex-direction: column;
-  height: 65%;
 `;
 const ChatMeLogo = styled.img`
   width: 200px;
@@ -93,6 +134,7 @@ const FormTitle = styled.h2`
   font-family: "TT Norms", sans-serif;
   margin-bottom: 10px;
 `;
+
 const FormInput = styled.input`
   width: 100%;
   height: 40px;
