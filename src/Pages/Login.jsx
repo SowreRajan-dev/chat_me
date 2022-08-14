@@ -161,6 +161,7 @@ const FormButton = styled.button`
   cursor: pointer;
   font-size: 1rem;
   color: #fff;
+  transition: all 0.3s ease-in-out;
 
   &:hover {
     background: linear-gradient(92.68deg, #2a8bf2 0%, #7cb8f7 100%);
