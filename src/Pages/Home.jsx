@@ -22,6 +22,6 @@ const HomeContainer = styled.div`
 `;
 
 const Chats = styled.div`
-  width: 70%;
+  width: 100%;
   height: 100vh;
 `;

@@ -11,6 +11,7 @@ function ChatCard() {
               src="https://images.unsplash.com/photo-1618641986557-1ecd230959aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
               alt="profile-img"
             />
+            <OnlineBar></OnlineBar>
           </ProfileImage>
           <UserDesc>
             <UserName>Luy Robin </UserName>
@@ -45,6 +46,7 @@ function ChatCard() {
 export default ChatCard;
 
 const ChatCardContainer = styled.div`
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -71,11 +73,22 @@ const ChatCardTopLeft = styled.div`
 const ChatCardTopRight = styled.div``;
 
 const ProfileImage = styled.div`
+  position: relative;
   img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
   }
+`;
+
+const OnlineBar = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00b894;
+  position: absolute;
+  top: 1px;
+  left: 2px;
 `;
 
 const UserDesc = styled.div`
@@ -139,6 +152,10 @@ const ChatCardBottomRight = styled.div`
   width: 40px;
   height: 20px;
   border-radius: 50%;
+  @media screen and (max-width: 1024px) {
+    width: 60px;
+    height: 15px;
+  }
 `;
 
 const ChatMessageCount = styled.p`
