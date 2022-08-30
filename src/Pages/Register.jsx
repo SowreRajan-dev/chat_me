@@ -1,8 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const registerUser = async (e) => {
+    e.preventDefault();
+    if (!username && !email && !password && !phoneNumber && !confirmPassword)
+      return;
+    if (!(password === confirmPassword)) return;
+    const user = {
+      username,
+      password,
+      email,
+      phoneNumber,
+    };
+    try {
+      const newUser = await axios.post("http://localhost:8080/user", {
+        name: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        password: user.password,
+      });
+      console.log(newUser.data.responseData);
+      window.localStorage.setItem("chat_me", newUser.data.responseData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <RegisterContainer>
       <RegisterDiv>
@@ -15,15 +46,36 @@ function Register() {
           <FormContainer>
             <FormType>
               <FormTitle label="name">Username</FormTitle>
-              <FormInput type="text" id="name" placeholder="Email" />
+              <FormInput
+                type="text"
+                id="name"
+                placeholder="Username"
+                onChange={(event) => {
+                  setUsername(event.target.value);
+                }}
+              />
             </FormType>
             <FormType>
               <FormTitle label="email">Email</FormTitle>
-              <FormInput type="text" id="email" placeholder="Email" />
+              <FormInput
+                type="text"
+                id="email"
+                placeholder="Email"
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
+              />
             </FormType>
             <FormType>
               <FormTitle label="password">Password</FormTitle>
-              <FormInput type="password" id="password" placeholder="Password" />
+              <FormInput
+                type="password"
+                id="password"
+                placeholder="Password"
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                }}
+              />
             </FormType>
             <FormType>
               <FormTitle label="confirm-password">Confirm Password</FormTitle>
@@ -31,6 +83,9 @@ function Register() {
                 type="password"
                 id="confirm-password"
                 placeholder="confirm password"
+                onChange={(event) => {
+                  setConfirmPassword(event.target.value);
+                }}
               />
             </FormType>
             <FormType>
@@ -40,9 +95,12 @@ function Register() {
                 id="phoneNumber"
                 placeholder="+91 Phone number"
                 maxLength={10}
+                onChange={(event) => {
+                  setPhoneNumber(event.target.value);
+                }}
               />
             </FormType>
-            <FormButton>Register</FormButton>
+            <FormButton onClick={registerUser}>Register</FormButton>
 
             <FormRegister>
               <p>

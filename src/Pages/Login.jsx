@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+
 function Login() {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onLogin = async (e) => {
+    e.preventDefault();
+    if (!phoneNumber && !password) return;
+    const loginUser = await axios.post("http://localhost:8080/login", {
+      phoneNumber,
+      password,
+    });
+
+    dispatch(login(loginUser.data.responseData));
+    navigate("/");
+  };
+
   return (
     <LoginContainer>
       <LoginDiv>
@@ -13,14 +35,30 @@ function Login() {
         <LoginBottom>
           <FormContainer>
             <FormType>
-              <FormTitle label="email">Email</FormTitle>
-              <FormInput type="email" id="email" placeholder="Email" />
+              <FormTitle label="phoneNumber">PhoneNumber</FormTitle>
+              <FormInput
+                type="text"
+                id="phoneNumber"
+                placeholder="+91 ..Enter your phone number"
+                onChange={(e) => {
+                  setPhoneNumber(e.target.value);
+                }}
+              />
             </FormType>
             <FormType>
               <FormTitle label="password">Password</FormTitle>
-              <FormInput type="password" id="password" placeholder="Password" />
+              <FormInput
+                type="password"
+                id="password"
+                placeholder="Password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
             </FormType>
-            <FormButton>Login</FormButton>
+            <FormType>
+              <FormButton onClick={onLogin}>Login</FormButton>
+            </FormType>
 
             <FormRegister>
               <p>
@@ -99,7 +137,7 @@ const SeperationLine = styled.div`
   height: 1px;
   background: #2a8bf2;
   position: absolute;
-  bottom: -70px;
+  bottom: -20px;
 
   @media only screen and (min-width: 768px) {
     width: 50%;
@@ -111,8 +149,8 @@ const SeperationLine = styled.div`
   }
 `;
 const LoginBottom = styled.div`
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
 `;
 const ChatMeLogo = styled.img`
   width: 200px;
@@ -123,6 +161,7 @@ const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
 `;
@@ -136,7 +175,7 @@ const FormTitle = styled.h2`
 `;
 
 const FormInput = styled.input`
-  width: 100%;
+  width: 80%;
   height: 40px;
   border-radius: 5px;
   border: 1px solid #000;
@@ -149,11 +188,16 @@ const FormInput = styled.input`
 `;
 const FormType = styled.div`
   margin-top: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 `;
 
 const FormButton = styled.button`
   width: 240px;
-  height: 40px;
+  height: 50px;
   margin-top: 30px;
   border-radius: 5px;
   background: linear-gradient(92.68deg, #7cb8f7 0%, #2a8bf2 100%);

@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { FiGrid, FiSettings } from "react-icons/fi";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { GrContactInfo, GrPowerShutdown } from "react-icons/gr";
 import { AiTwotoneCalendar } from "react-icons/ai";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/slices/userSlice";
 
 function Sidebar() {
+  const user = useSelector((state) => state.user.userInfo);
+  const dispatch = useDispatch();
   return (
     <SidebarContainer>
       <SidebarTop>
         <ProfilePic src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1085&q=80" />
-        <ProfileName>Henry Jabbawockiez</ProfileName>
+        <ProfileName>{user.name}</ProfileName>
       </SidebarTop>
       <SidebarMiddle>
         <SidebarList>
@@ -55,7 +59,7 @@ function Sidebar() {
         </SidebarList>
       </SidebarMiddle>
       <SidebarBottom>
-        <SidebarLogoutBtn>
+        <SidebarLogoutBtn onClick={() => dispatch(logout())}>
           <SidebarListItemIcon>
             <GrPowerShutdown />
           </SidebarListItemIcon>
