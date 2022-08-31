@@ -19,6 +19,17 @@ export const getUsers = async () => {
   }
 };
 
+export const getUserByPhoneNumber = async (phoneNumber) => {
+  try {
+    let response = await axios.post(`${URL}/getUserByPhone`, {
+      phoneNumber: phoneNumber,
+    });
+    return response.data;
+  } catch (err) {
+    console.log("Error while calling getUserByPhoneNumber api", err);
+  }
+};
+
 export const setConversation = async (data) => {
   try {
     await axios.post(`${URL}/conversation/add`, data);

@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { AiOutlineDown, AiOutlineSearch } from "react-icons/ai";
+import {
+  AiOutlineDown,
+  AiOutlineSearch,
+  AiOutlinePlusCircle,
+} from "react-icons/ai";
 import ChatCard from "./ChatCard";
+import { getUserByPhoneNumber } from "../Service/api";
 function Chats() {
+  const [openNewChat, setOpenNewChat] = useState(false);
+  const OpenNewChatMenu = () => {
+    setOpenNewChat((prev) => !prev);
+  };
   return (
     <ChatsContainer>
       <ChatsTopSection>
@@ -13,7 +23,11 @@ function Chats() {
           </RecentChatText>
         </ChatsTopSectionLeft>
         <ChatSectionRight>
-          <NewChatButton>+ Create New Chat</NewChatButton>
+          <NewChatButton onClick={OpenNewChatMenu}>
+            + Create New Chat
+          </NewChatButton>
+
+          {openNewChat && <SearchUserContainer />}
         </ChatSectionRight>
       </ChatsTopSection>
       <SearchBar>
@@ -45,6 +59,68 @@ function Chats() {
 }
 
 export default Chats;
+
+const SearchUserContainer = () => {
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [userNewChat, setUser] = useState(null);
+  const currUser = useSelector((state) => state.user).userInfo;
+
+  const getNewUser = async (phoneNumber) => {
+    if (currUser.phoneNumber === phoneNumber) return;
+    try {
+      const newUser = await getUserByPhoneNumber(phoneNumber);
+      if (!newUser.success) return;
+      setUser(newUser);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (!phoneNumber) return;
+    getNewUser(phoneNumber);
+  }, [phoneNumber]);
+
+  return (
+    <SearchContainer>
+      <SearchTop>
+        <NewSearchBar>
+          <NewSearch>
+            <IconContainer>
+              <AiOutlineSearch />
+            </IconContainer>
+            <SearchNewInput
+              placeholder="Search a number to chat..."
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </NewSearch>
+        </NewSearchBar>
+      </SearchTop>
+      <SearchLists>
+        {userNewChat ? (
+          <UserCard>
+            <NewUserLeft>
+              <ProfilePic
+                src={
+                  userNewChat.responseData.profilePic
+                    ? userNewChat.responseData.profilePic
+                    : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                }
+                alt="new-user-dp"
+              />
+              <NewUserName>{userNewChat.responseData.name}</NewUserName>
+            </NewUserLeft>
+            <NewUserRight>
+              <AiOutlinePlusCircle fontSize={30} opacity={0.6} />
+            </NewUserRight>
+          </UserCard>
+        ) : (
+          <NoNewUser>No results found</NoNewUser>
+        )}
+      </SearchLists>
+    </SearchContainer>
+  );
+};
 
 const ChatsContainer = styled.div`
   display: flex;
@@ -187,4 +263,114 @@ const ChatLists = styled.div`
   width: 100%;
   height: 100%;
   padding: 10px;
+`;
+
+const SearchContainer = styled.div`
+  width: 40%;
+  height: 180px;
+  background: #f3f3fb;
+  position: absolute;
+  z-index: 5;
+  left: 20%;
+  border-radius: 20px;
+  border: 1px solid #aaa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const SearchTop = styled.div`
+  width: 100%;
+  height: 80px;
+`;
+
+const SearchLists = styled.div`
+  width: 100%;
+`;
+
+const SearchNewInput = styled.input`
+  width: 90%;
+  height: 20px;
+  border-radius: 5px;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: "TT Norms", sans-serif;
+  color: #000;
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #707c97;
+  }
+`;
+
+const NewSearch = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+`;
+
+const NewSearchBar = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 30px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  margin-left: 20px;
+`;
+
+const UserCard = styled.div`
+  width: 80%;
+  height: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  margin-left: 20px;
+  padding: 10px;
+  cursor: pointer;
+`;
+
+const ProfilePic = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+`;
+
+const NewUserName = styled.p`
+  margin-left: 10px;
+  font-size: 0.75rem;
+  font-weight: 200;
+  color: #707c97;
+  font-family: "TT Norms", sans-serif;
+`;
+
+const NewUserLeft = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex: 1;
+`;
+
+const NewUserRight = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const NoNewUser = styled.p`
+  margin-left: 10px;
+  font-size: 1rem;
+  font-weight: 200;
+  color: #707c97;
+  font-family: "TT Norms", sans-serif;
+  text-align: center;
 `;
