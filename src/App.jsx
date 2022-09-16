@@ -1,39 +1,52 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
+import { SocketContext } from "./context/socket";
 
 function App() {
-  const socket = useRef();
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [socket, setSocket] = useState();
+  let id = null;
+  if (id === null) {
+    id = user.userInfo._id;
+  }
 
   useEffect(() => {
-    socket.current = io("http://localhost:8080/", {
-      transports: ["websocket"],
-    });
-  }, []);
+    if (!user.isUserLoggedIn && id === null && id === undefined) return;
 
+    const newSocket = io("http://localhost:8080/", {
+      query: {
+        id,
+      },
+    });
+
+    setSocket(newSocket);
+  }, [user.isUserLoggedIn, id]);
   return (
     <div>
-      <Router>
-        <Routes>
-          <Route
-            path="/register"
-            element={user.isUserLoggedIn ? <Home /> : <Register />}
-          />
-          <Route
-            path="/login"
-            element={user.isUserLoggedIn ? <Home /> : <Login />}
-          />
-          <Route
-            path="/"
-            element={user.isUserLoggedIn ? <Home /> : <Login />}
-          />
-        </Routes>
-      </Router>
+      <SocketContext.Provider value={socket}>
+        <Router>
+          <Routes>
+            <Route
+              path="/register"
+              element={user.isUserLoggedIn ? <Home /> : <Register />}
+            />
+            <Route
+              path="/login"
+              element={user.isUserLoggedIn ? <Home /> : <Login />}
+            />
+            <Route
+              path="/"
+              element={user.isUserLoggedIn ? <Home /> : <Login />}
+            />
+          </Routes>
+        </Router>
+      </SocketContext.Provider>
     </div>
   );
 }

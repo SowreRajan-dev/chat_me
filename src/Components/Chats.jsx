@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
   AiOutlineDown,
@@ -8,18 +8,24 @@ import {
 } from "react-icons/ai";
 import ChatCard from "./ChatCard";
 import { getUserByPhoneNumber } from "../Service/api";
+import { currentChatUser } from "../redux/slices/userSlice";
+
 function Chats() {
   const [openNewChat, setOpenNewChat] = useState(false);
+  const { usersLists } = useSelector((state) => state.user);
+
   const OpenNewChatMenu = () => {
     setOpenNewChat((prev) => !prev);
   };
+
   return (
     <ChatsContainer>
       <ChatsTopSection>
         <ChatsTopSectionLeft>
           <ChatText>Chats</ChatText>
           <RecentChatText>
-            Recent Chats <AiOutlineDown />
+            Recent Chats
+            <AiOutlineDown />
           </RecentChatText>
         </ChatsTopSectionLeft>
         <ChatSectionRight>
@@ -37,21 +43,24 @@ function Chats() {
           </IconContainer>
           <SearchInput placeholder="Search" />
         </Search>
-        <MessageText>
-          Messages
-          <IconContainer>
-            <AiOutlineDown />
-          </IconContainer>
-        </MessageText>
+        <MessageText>Messages</MessageText>
+        <IconContainer>
+          <AiOutlineDown />
+        </IconContainer>
       </SearchBar>
       <ChatsListSection>
         <ChatLists>
-          <ChatCard />
-          <ChatCard />
-          <ChatCard />
-          <ChatCard />
-          <ChatCard />
-          <ChatCard />
+          {usersLists.map((user, index) => (
+            <ChatCard
+              userName={user.name}
+              status={user?.onlineStatus}
+              lastMessage="he was a good friend"
+              messageCount={2}
+              timeAgo={5}
+              key={index}
+              user={user}
+            />
+          ))}
         </ChatLists>
       </ChatsListSection>
     </ChatsContainer>
@@ -64,6 +73,14 @@ const SearchUserContainer = () => {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [userNewChat, setUser] = useState(null);
   const currUser = useSelector((state) => state.user).userInfo;
+  const [selectNewUser, setSelectNewUser] = useState(false);
+  const dispatch = useDispatch();
+
+  const selectUser = () => {
+    setSelectNewUser((prev) => !prev);
+    dispatch(currentChatUser(userNewChat));
+    console.log(userNewChat);
+  };
 
   const getNewUser = async (phoneNumber) => {
     if (currUser.phoneNumber === phoneNumber) return;
@@ -92,13 +109,14 @@ const SearchUserContainer = () => {
             <SearchNewInput
               placeholder="Search a number to chat..."
               onChange={(e) => setPhoneNumber(e.target.value)}
+              max={10}
             />
           </NewSearch>
         </NewSearchBar>
       </SearchTop>
       <SearchLists>
         {userNewChat ? (
-          <UserCard>
+          <UserCard onClick={selectUser}>
             <NewUserLeft>
               <ProfilePic
                 src={
@@ -235,6 +253,7 @@ const IconContainer = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin: 0 10px;
 `;
 
 const Search = styled.div`
@@ -338,6 +357,7 @@ const UserCard = styled.div`
   margin-left: 20px;
   padding: 10px;
   cursor: pointer;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const ProfilePic = styled.img`

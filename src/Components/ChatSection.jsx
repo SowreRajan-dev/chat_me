@@ -4,108 +4,74 @@ import { FiPaperclip } from "react-icons/fi";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { AiOutlinePlus, AiOutlineSend } from "react-icons/ai";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 function ChatSection() {
+  const { currentUserChat } = useSelector((state) => state.user);
+
   return (
-    <ChatSectionContainer>
-      <ChatSectionTop>
-        <ChatSectionTopLeft>
-          <ProfileImage>
-            <img
-              src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
-              alt="profile-pic"
-            />
-          </ProfileImage>
-          <UserDesc>
-            <UserName>Nika Jerrardo </UserName>
-            <UserStatus>last online 5 hours ago</UserStatus>
-          </UserDesc>
-        </ChatSectionTopLeft>
-        <ChatSectionTopRight>
-          <IconContainer>
-            <FiPaperclip />
-          </IconContainer>
-          <IconContainer>
-            <BiDotsVerticalRounded />
-          </IconContainer>
-        </ChatSectionTopRight>
-      </ChatSectionTop>
-      <ChatArea>
-        <ChatMessagePreview>
-          <ProfilePicDisplay>
-            <img
-              src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
-              alt="profile-pic"
-            />
-          </ProfilePicDisplay>
-          <ChatMessagePreviewText>
-            Hello! Finally found the time to write to you) I need your help in
-            creating interactive animations for my mobile application.
-          </ChatMessagePreviewText>
-        </ChatMessagePreview>
-        <ChatMessagePreview>
-          <ProfilePicDisplay>
-            <img
-              src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
-              alt="profile-pic"
-            />
-          </ProfilePicDisplay>
-          <ChatMessagePreviewText>
-            Most of its text is made up from sections 1.10.32-3 of Cicero's De
-            finibus bonorum et malorum (On the Boundaries of Goods and Evils;
-            finibus may also be translated as purposes).
-          </ChatMessagePreviewText>
-        </ChatMessagePreview>
-        <ChatMessagePreview>
-          <ProfilePicDisplay>
-            <img
-              src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
-              alt="profile-pic"
-            />
-          </ProfilePicDisplay>
-          <ChatMessagePreviewText>
-            Most of its text is made up from sections 1.10.32-3 of Cicero's De
-            finibus bonorum et malorum (On the Boundaries of Goods and Evils;
-            finibus may also be translated as purposes).
-          </ChatMessagePreviewText>
-        </ChatMessagePreview>
-        <ChatUserPreview>
-          <ChatMessageUserPreviewText>
-            Most of its text is made up from sections 1.10.32-3 of Cicero's De
-            finibus bonorum et malorum (On the Boundaries of Goods and Evils;
-            finibus may also be translated as purposes).
-          </ChatMessageUserPreviewText>
-        </ChatUserPreview>
-        <ChatUserPreview>
-          <ChatMessageUserPreviewText>
-            Most of its text is made up from sections 1.10.32-3 of Cicero's De
-            finibus bonorum et malorum (On the Boundaries of Goods and Evils;
-            finibus may also be translated as purposes).
-          </ChatMessageUserPreviewText>
-        </ChatUserPreview>
-        <ChatUserPreview>
-          <ChatMessageUserPreviewText>
-            Most of its text is made up from sections 1.10.32-3 of Cicero's De
-            finibus bonorum et malorum (On the Boundaries of Goods and Evils;
-            finibus may also be translated as purposes).
-          </ChatMessageUserPreviewText>
-        </ChatUserPreview>
-      </ChatArea>
-      <ChatSectionBottom>
-        <ChatInputSection>
-          <PlusSymbol>
-            <AiOutlinePlus />
-          </PlusSymbol>
-          <ChatInput type="text" placeholder="Type a message here" />
-          <EmojiContainer>
-            <MdOutlineEmojiEmotions />
-          </EmojiContainer>
-          <SendButton>
-            <AiOutlineSend />
-          </SendButton>
-        </ChatInputSection>
-      </ChatSectionBottom>
-    </ChatSectionContainer>
+    currentUserChat && (
+      <ChatSectionContainer>
+        <ChatSectionTop>
+          <ChatSectionTopLeft>
+            <ProfileImage>
+              <img
+                src={
+                  currentUserChat.profilePic
+                    ? currentUserChat.profilePic
+                    : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                }
+                alt="profile-pic"
+              />
+            </ProfileImage>
+            <UserDesc>
+              <UserName>{currentUserChat.name}</UserName>
+              <UserStatus>last online 5 hours ago</UserStatus>
+            </UserDesc>
+          </ChatSectionTopLeft>
+          <ChatSectionTopRight>
+            <IconContainer>
+              <FiPaperclip />
+            </IconContainer>
+            <IconContainer>
+              <BiDotsVerticalRounded />
+            </IconContainer>
+          </ChatSectionTopRight>
+        </ChatSectionTop>
+        <ChatArea>
+          <ChatMessagePreview>
+            <ProfilePicDisplay>
+              <img
+                src={
+                  currentUserChat.profilePic
+                    ? currentUserChat.profilePic
+                    : "https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
+                }
+                alt="profile-pic"
+              />
+            </ProfilePicDisplay>
+            <ChatMessagePreviewText>
+              Hello! Finally found the time to write to you I need your help in
+              creating interactive animations for my mobile application.
+            </ChatMessagePreviewText>
+          </ChatMessagePreview>
+        </ChatArea>
+        <ChatSectionBottom>
+          <ChatInputSection>
+            <PlusSymbol>
+              <AiOutlinePlus />
+            </PlusSymbol>
+            <ChatInput type="text" placeholder="Type a message here" />
+            <EmojiContainer>
+              <MdOutlineEmojiEmotions />
+            </EmojiContainer>
+            <SendButton>
+              <AiOutlineSend />
+            </SendButton>
+          </ChatInputSection>
+        </ChatSectionBottom>
+      </ChatSectionContainer>
+    )
   );
 }
 
@@ -244,27 +210,27 @@ const ChatMessagePreviewText = styled.p`
   word-break: break-word;
 `;
 
-const ChatUserPreview = styled.div`
-  display: flex;
-  padding: 10px;
-  flex-direction: column;
-  position: relative;
-  align-items: flex-end;
-  margin-right: 20px;
-`;
+// const ChatUserPreview = styled.div`
+//   display: flex;
+//   padding: 10px;
+//   flex-direction: column;
+//   position: relative;
+//   align-items: flex-end;
+//   margin-right: 20px;
+// `;
 
-const ChatMessageUserPreviewText = styled.p`
-  background: #fff;
-  color: #707c97;
-  padding: 10px;
-  box-shadow: 15px 15px 35px 0px #707c970d;
+// const ChatMessageUserPreviewText = styled.p`
+//   background: #fff;
+//   color: #707c97;
+//   padding: 10px;
+//   box-shadow: 15px 15px 35px 0px #707c970d;
 
-  border-radius: 10px;
-  width: 70%;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
-`;
+//   border-radius: 10px;
+//   width: 70%;
+//   overflow-wrap: break-word;
+//   word-wrap: break-word;
+//   word-break: break-word;
+// `;
 
 const ChatInputSection = styled.div`
   width: 100%;

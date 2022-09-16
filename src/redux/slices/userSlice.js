@@ -5,8 +5,9 @@ const userSlice = createSlice({
   initialState: {
     isUserLoggedIn: false,
     userInfo: {},
-    // userToken: null,
-    // loading: false,
+    currentUserSelected: {},
+    usersLists: [],
+    currentUserChat: {},
   },
   reducers: {
     login: (state, action) => {
@@ -14,6 +15,14 @@ const userSlice = createSlice({
       state.userInfo = action.payload;
       localStorage.setItem("chat_me_user", action.payload);
     },
+    currentChatUser: (state, action) => {
+      state.currentUserSelected = action.payload.responseData;
+      state.usersLists.push(action.payload.responseData);
+    },
+    onChatUser: (state, action) => {
+      state.currentUserChat = action.payload;
+    },
+
     logout: (state, action) => {
       state.isUserLoggedIn = false;
       state.userInfo = {};
@@ -23,4 +32,4 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
-export const { login, logout } = userSlice.actions;
+export const { login, currentChatUser, onChatUser, logout } = userSlice.actions;

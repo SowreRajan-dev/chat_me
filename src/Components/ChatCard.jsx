@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { SocketContext } from "../context/socket";
+import { onChatUser } from "../redux/slices/userSlice";
 
-function ChatCard() {
+function ChatCard({
+  userName,
+  status,
+  timeAgo,
+  lastMessage,
+  messageCount,
+  user,
+}) {
+  const dispatch = useDispatch();
+  const setCurrentUserInChat = (user) => {
+    dispatch(onChatUser(user));
+  };
   return (
-    <ChatCardContainer>
+    <ChatCardContainer onClick={() => setCurrentUserInChat(user)}>
       <ChatCardTop>
         <ChatCardTopLeft>
           <ProfileImage>
@@ -14,29 +28,25 @@ function ChatCard() {
             <OnlineBar></OnlineBar>
           </ProfileImage>
           <UserDesc>
-            <UserName>Luy Robin </UserName>
-            <UserStatus>Online</UserStatus>
+            <UserName>{userName}</UserName>
+            <UserStatus>{status}</UserStatus>
           </UserDesc>
         </ChatCardTopLeft>
         <ChatCardTopRight>
           <ChatTime>
-            <ChatTimeText>1 minute ago</ChatTimeText>
+            <ChatTimeText>{timeAgo} minute ago</ChatTimeText>
           </ChatTime>
         </ChatCardTopRight>
       </ChatCardTop>
       <ChatCardBottom>
         <ChatCardBottomLeft>
           <ChatMessagePreview>
-            <ChatMessagePreviewText>
-              Most of its text is made up from sections 1.10.32-3 of Cicero's De
-              finibus bonorum et malorum (On the Boundaries of Goods and Evils;
-              finibus may also be translated as purposes).
-            </ChatMessagePreviewText>
+            <ChatMessagePreviewText>{lastMessage}</ChatMessagePreviewText>
           </ChatMessagePreview>
         </ChatCardBottomLeft>
 
         <ChatCardBottomRight>
-          <ChatMessageCount>2</ChatMessageCount>
+          <ChatMessageCount>{messageCount}</ChatMessageCount>
         </ChatCardBottomRight>
       </ChatCardBottom>
     </ChatCardContainer>
@@ -149,12 +159,12 @@ const ChatCardBottomRight = styled.div`
   align-items: center;
   background: #ff3366;
   color: #fff;
-  width: 40px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   @media screen and (max-width: 1024px) {
-    width: 60px;
-    height: 15px;
+    width: 30px;
+    height: 30px;
   }
 `;
 

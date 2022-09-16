@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,8 +29,8 @@ function Register() {
         phoneNumber: user.phoneNumber,
         password: user.password,
       });
-      console.log(newUser.data.responseData);
       window.localStorage.setItem("chat_me", newUser.data.responseData);
+      navigate("/login");
     } catch (err) {
       console.log(err);
     }
