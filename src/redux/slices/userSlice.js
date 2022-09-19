@@ -22,6 +22,10 @@ const userSlice = createSlice({
     onChatUser: (state, action) => {
       state.currentUserChat = action.payload;
     },
+    deleteSpecificUser: (state, action, index) => {
+      console.log(index);
+      state.usersLists.splice(index, 1);
+    },
 
     logout: (state, action) => {
       state.isUserLoggedIn = false;
@@ -32,4 +36,10 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
-export const { login, currentChatUser, onChatUser, logout } = userSlice.actions;
+export const {
+  login,
+  currentChatUser,
+  onChatUser,
+  deleteSpecificUser,
+  logout,
+} = userSlice.actions;

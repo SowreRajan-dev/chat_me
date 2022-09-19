@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { SocketContext } from "../context/socket";
-import { onChatUser } from "../redux/slices/userSlice";
+import { deleteSpecificUser, onChatUser } from "../redux/slices/userSlice";
 
 function ChatCard({
   userName,
@@ -16,13 +16,18 @@ function ChatCard({
   const setCurrentUserInChat = (user) => {
     dispatch(onChatUser(user));
   };
+
   return (
     <ChatCardContainer onClick={() => setCurrentUserInChat(user)}>
       <ChatCardTop>
         <ChatCardTopLeft>
           <ProfileImage>
             <img
-              src="https://images.unsplash.com/photo-1618641986557-1ecd230959aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+              src={
+                user.profilePic
+                  ? user.profilePic
+                  : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+              }
               alt="profile-img"
             />
             <OnlineBar></OnlineBar>

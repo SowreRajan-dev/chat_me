@@ -1,13 +1,74 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { FiPaperclip } from "react-icons/fi";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { AiOutlinePlus, AiOutlineSend } from "react-icons/ai";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { useConversation } from "../context/conversations";
+import { SocketContext } from "../context/socket";
+import { useEffect } from "react";
+import { useCallback } from "react";
 
 function ChatSection() {
-  const { currentUserChat } = useSelector((state) => state.user);
+  const { currentUserChat, userInfo: user } = useSelector(
+    (state) => state.user
+  );
+  const [text, setText] = useState("");
+  const [ok, setOk] = useState(false);
+
+  // const { sendMessage, currentConversation, chat, count, conversations } =
+  //   useConversation();
+  // const socket = useContext(SocketContext);
+
+  // const okCount = useCallback(
+  //   (id) => {
+  //     return (
+  //       count.findIndex((i) => {
+  //         return i === id;
+  //       }) >= 0
+  //     );
+  //   },
+  //   [count]
+  // );
+
+  // useEffect(() => {
+  //   if (text.length > 0 && !ok) {
+  //     setOk(true);
+  //   }
+  //   if (text.length === 0 && ok) {
+  //     setOk(false);
+  //   }
+  // }, [text, ok]);
+
+  // function handleSubmit() {
+  //   // if (text.length === 0) return;
+  //   // const { recipients, ...other } = currentConversation;
+  //   // // console.log(currentConversation);
+  //   // sendMessage(
+  //   //   currentConversation.recipients.map((r) => r._id),
+  //   //   { recipients: [...recipients, user], ...other },
+  //   //   text
+  //   // );
+  //   // setOk(false);
+  //   // setText("");
+  // }
+
+  // const currentMessage = (id) => {
+  //   const num = chat.findIndex((i) => {
+  //     return i.current._id === id;
+  //   });
+  //   if (num === -1) return <p></p>;
+  //   const m = chat[num].messages;
+  //   if (m.length === 0) return <p></p>;
+  //   let p = m[m.length] - 1;
+  //   if (p.length > 15) p = p.substr(0, 15) + "...";
+  //   let ok =
+  //     count.findIndex((i) => {
+  //       return i === id;
+  //     }) >= 0;
+  //   if (ok) return <p>{p}</p>;
+  // };
 
   return (
     currentUserChat && (
@@ -40,7 +101,7 @@ function ChatSection() {
         </ChatSectionTop>
         <ChatArea>
           <ChatMessagePreview>
-            <ProfilePicDisplay>
+            {/* <ProfilePicDisplay>
               <img
                 src={
                   currentUserChat.profilePic
@@ -50,10 +111,10 @@ function ChatSection() {
                 alt="profile-pic"
               />
             </ProfilePicDisplay>
-            <ChatMessagePreviewText>
-              Hello! Finally found the time to write to you I need your help in
-              creating interactive animations for my mobile application.
-            </ChatMessagePreviewText>
+           
+              <ChatMessagePreviewText>
+               
+              </ChatMessagePreviewText> */}
           </ChatMessagePreview>
         </ChatArea>
         <ChatSectionBottom>
@@ -61,7 +122,15 @@ function ChatSection() {
             <PlusSymbol>
               <AiOutlinePlus />
             </PlusSymbol>
-            <ChatInput type="text" placeholder="Type a message here" />
+            <ChatInput
+              type="text"
+              placeholder="Type a message here"
+              onChange={(e) => setText(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                }
+              }}
+            />
             <EmojiContainer>
               <MdOutlineEmojiEmotions />
             </EmojiContainer>

@@ -6,10 +6,11 @@ import Register from "./Pages/Register";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import { SocketContext } from "./context/socket";
+import ConversationProvider from "./context/conversations";
 
 function App() {
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [socket, setSocket] = useState();
   let id = null;
   if (id === null) {
@@ -30,22 +31,24 @@ function App() {
   return (
     <div>
       <SocketContext.Provider value={socket}>
-        <Router>
-          <Routes>
-            <Route
-              path="/register"
-              element={user.isUserLoggedIn ? <Home /> : <Register />}
-            />
-            <Route
-              path="/login"
-              element={user.isUserLoggedIn ? <Home /> : <Login />}
-            />
-            <Route
-              path="/"
-              element={user.isUserLoggedIn ? <Home /> : <Login />}
-            />
-          </Routes>
-        </Router>
+        <ConversationProvider>
+          <Router>
+            <Routes>
+              <Route
+                path="/register"
+                element={user.isUserLoggedIn ? <Home /> : <Register />}
+              />
+              <Route
+                path="/login"
+                element={user.isUserLoggedIn ? <Home /> : <Login />}
+              />
+              <Route
+                path="/"
+                element={user.isUserLoggedIn ? <Home /> : <Login />}
+              />
+            </Routes>
+          </Router>
+        </ConversationProvider>
       </SocketContext.Provider>
     </div>
   );

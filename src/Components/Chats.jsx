@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -9,6 +9,9 @@ import {
 import ChatCard from "./ChatCard";
 import { getUserByPhoneNumber } from "../Service/api";
 import { currentChatUser } from "../redux/slices/userSlice";
+import { useConversation } from "../context/conversations";
+import { SocketContext } from "../context/socket";
+import axios from "axios";
 
 function Chats() {
   const [openNewChat, setOpenNewChat] = useState(false);
@@ -98,6 +101,88 @@ const SearchUserContainer = () => {
     getNewUser(phoneNumber);
   }, [phoneNumber]);
 
+  // const [loading, setLoading] = useState(true);
+
+  const {
+    setCurrentConversation,
+    setConversations,
+    setChat,
+    currentConversation,
+    conversations,
+    chat,
+  } = useConversation();
+  const { currentUserChat, userInfo } = useSelector((state) => state.user);
+
+  const socket = useContext(SocketContext);
+
+  async function findOrCreate() {
+    console.log("finding or create");
+    try {
+      await axios
+        .post("http://localhost:8080/conversations/findOrCreate", {
+          recipients: [currentUserChat],
+          userId: userInfo._id,
+        })
+        .then((res) => {
+          const { ans, qty } = res.data;
+          if (!qty) {
+            console.log("no qty");
+            setChat((prev) => {
+              console.log(prev);
+              return [{ id: ans._id, message: [] }, ...prev];
+            });
+            setConversations((prev) => {
+              console.log(prev);
+              return [ans, ...prev];
+            });
+          }
+          setCurrentConversation(ans);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  function addUserConversation() {
+    const { recipients, ...other } = currentConversation;
+    const nw = [...recipients, userInfo];
+    const ns = {
+      recipients: nw,
+      ...other,
+    };
+
+    socket.emit(
+      "add_user",
+      {
+        add: [currentUserChat],
+        currentConversation: ns,
+      },
+      ({ err }) => {
+        if (err) console.log("add_user err: ", err);
+        else {
+          setConversations((prev) => {
+            return prev.map((i) => {
+              if (i._id === currentConversation._id) return i;
+              else {
+                const { recipients, ...other } = i;
+                return {
+                  ...other,
+                  recipients: { ...recipients, ...currentUserChat },
+                };
+              }
+            });
+          });
+        }
+      }
+    );
+  }
+
+  const setUserConversation = () => {
+    // selectUser();
+    findOrCreate();
+    // addUserConversation();
+  };
+
   return (
     <SearchContainer>
       <SearchTop>
@@ -116,7 +201,7 @@ const SearchUserContainer = () => {
       </SearchTop>
       <SearchLists>
         {userNewChat ? (
-          <UserCard onClick={selectUser}>
+          <UserCard onClick={setUserConversation}>
             <NewUserLeft>
               <ProfilePic
                 src={
@@ -307,7 +392,7 @@ const SearchLists = styled.div`
 `;
 
 const SearchNewInput = styled.input`
-  width: 90%;
+  width: 100%;
   height: 20px;
   border-radius: 5px;
   border: none;
